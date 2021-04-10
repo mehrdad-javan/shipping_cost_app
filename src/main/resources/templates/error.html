@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error Page</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <br/>
+    <div class="card">
+        <div class="card-header card bg-danger text-white">
+            <h2>INTERNAL ERROR</h2>
+        </div>
+
+        <div></div>
+
+        <div class="card-body">
+            <br/>
+            <p class="alert alert-danger" th:if="${error != null}" th:text="${error}"></p>
+            <br/>
+        </div>
+
+
+        <div class="card-footer card bg-dark">
+        </div>
+    </div>
+
+</body>
+</html>

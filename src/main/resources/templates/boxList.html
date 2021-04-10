@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Show List</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <br/>
+    <div class="card">
+        <div class="card-header card bg-dark text-white">
+            <h2>Show List</h2>
+            <p><a href="/shipping/addForm" class="btn btn-outline-success">Add Form</a></p>
+
+        </div>
+
+        <div></div>
+
+        <div class="card-body">
+            <br/>
+            <div th:if="${message}" th:text="${message}" th:class="${'alert ' + alertClass}"></div>
+            <br/>
+
+            <div th:if="${boxes.isEmpty()}">
+                No Data Available
+            </div>
+
+            <div th:unless="${boxes.isEmpty()}">
+
+                <table class="table table-dark table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Country</th>
+                        <th>Weight</th>
+                        <th>Cost</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="box : ${boxes}">
+                        <td><span th:text="${box.id}"></span></td>
+                        <td><span th:text="${box.name}"></span></td>
+                        <td><span th:text="${box.type}"></span></td>
+                        <td><span th:text="${box.country}"></span></td>
+                        <td><span th:text="${box.weight}"></span> - <span th:text="${box.weightType}"></span></td>
+                        <td><span th:text="${box.cost}"></span> SEK</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="card-footer ">
+        <a href="/shipping/addForm" class="btn btn-outline-danger">Back</a>
+    </div>
+</div>
+
+</body>
+</html>
