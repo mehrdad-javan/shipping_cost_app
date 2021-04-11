@@ -5,17 +5,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import se.lexicon.shipping_cost.entity.Box;
 import se.lexicon.shipping_cost.exception.RecordDuplicateException;
+import se.lexicon.shipping_cost.exception.RecordNotFountException;
 import se.lexicon.shipping_cost.repository.BoxRepository;
 import se.lexicon.shipping_cost.service.BoxService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -60,7 +60,7 @@ public class ShippingController {
 
 
         try {
-            double shippingCost =box.calcShippingCost();
+            double shippingCost = box.calcShippingCost();
             box.setCost(shippingCost);
             Box savedBox = boxService.save(box);
             redirectAttributes.addFlashAttribute("message", "Operation is Done. Tracking Code:" + savedBox.getId());
@@ -72,6 +72,62 @@ public class ShippingController {
             bindingResult.addError(error);
             return "boxForm";
         }
+    }
+
+
+    @GetMapping("/search")
+    public String searchForm(Model model) {
+        model.addAttribute("boxes", boxService.getAll());
+        return "searchBox";
+    }
+
+
+    @PostMapping("/search")
+    public String search(@RequestParam(name = "name", required = false, defaultValue = "ALL") String name,
+                         @RequestParam(name = "country", required = false, defaultValue = "ALL") String country,
+                         Model model, RedirectAttributes redirectAttributes) {
+        List<Box> boxes = new ArrayList<>();
+        System.out.println("name = " + name);
+        System.out.println("country = " + country);
+        try {
+
+            if (name.equalsIgnoreCase("ALL") && country.equalsIgnoreCase("ALL")) {
+                System.out.println("SEARCH ALL");
+                boxes = boxService.getAll();
+                model.addAttribute("boxes", boxes);
+                return "searchBox";
+            }
+
+            if (!name.equalsIgnoreCase("ALL") && country.equalsIgnoreCase("ALL")) {
+                System.out.println("SEARCH BY NAME");
+                boxes = boxService.findByName(name);
+                model.addAttribute("boxes", boxes);
+                return "searchBox";
+            }
+            if (name.equalsIgnoreCase("ALL") && !country.equalsIgnoreCase("ALL")) {
+                System.out.println("SEARCH BY COUNTRY");
+                boxes = boxService.findByCountry(country);
+                model.addAttribute("boxes", boxes);
+
+                return "searchBox";
+            }
+
+            if (!name.equalsIgnoreCase("ALL") && !country.equalsIgnoreCase("ALL")) {
+                System.out.println("SEARCH BY NAME AND COUNTRY");
+                boxes = boxService.findByNameAndCountry(name, country);
+                model.addAttribute("boxes", boxes);
+                return "searchBox";
+            }
+
+        } catch (RecordNotFountException e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("message", "Data Not Found");
+            redirectAttributes.addFlashAttribute("alertClass", "alert-warning");
+            model.addAttribute("boxes", boxes);
+        }
+
+        return "redirect:/shipping/search";
+
     }
 
 

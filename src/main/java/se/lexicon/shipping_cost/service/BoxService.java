@@ -14,6 +14,10 @@ public interface BoxService {
 
     List<Box> findByName(String name) throws RecordNotFountException;
 
+    List<Box> findByCountry(String country) throws RecordNotFountException;
+
+    List<Box> findByNameAndCountry(String name, String country) throws RecordNotFountException;
+
     Box save(Box box) throws RecordDuplicateException;
 
 }

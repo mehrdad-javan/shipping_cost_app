@@ -63,4 +63,22 @@ public class BoxServiceImpl implements BoxService {
             throw new RecordDuplicateException("duplicate exception");
         }
     }
+
+    @Override
+    public List<Box> findByNameAndCountry(String name,String country) throws RecordNotFountException {
+        if (name == null || name.length() == 0) throw new ArgumentException("name is not valid");
+        if (country == null || country.length() == 0) throw new ArgumentException("country is not valid");
+        List<Box> boxes = boxRepository.findByNameIgnoreCaseAndCountryIgnoreCase(name,country);
+        if (boxes.size() != 0) return boxes;
+        else throw new RecordNotFountException("Data not found");
+    }
+
+    @Override
+    public List<Box> findByCountry(String country) throws RecordNotFountException {
+        if (country == null || country.length() == 0) throw new ArgumentException("country is not valid");
+        List<Box> boxes = boxRepository.findByCountryIgnoreCase(country);
+        if (boxes.size() != 0) return boxes;
+        else throw new RecordNotFountException("Data not found");
+    }
+
 }

@@ -16,18 +16,71 @@
     <div class="card">
         <div class="card-header card bg-dark text-white">
             <h2>Search Form</h2>
+            <p><a href="/shipping/addForm" class="btn btn-outline-success">Add Form</a></p>
         </div>
 
         <div></div>
 
         <div class="card-body">
+            <br/>
+            <div th:if="${message}" th:text="${message}" th:class="${'alert ' + alertClass}"></div>
+            <br/>
+
+            <form th:action="@{/shipping/search}" method="post">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" name="name" placeholder="Enter Name Here.." class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Country</label>
+                        <select class="form-control" name="country">
+                            <option value=""></option>
+                            <option value="sweden">Sweden</option>
+                            <option value="australia">Australia</option>
+                        </select>
+                    </div>
+
+                    <hr/>
+                    <button type="submit" class="btn btn-primary btn-block mb-3">Search</button>
+                </div>
+            </form>
+
+            <br/>
+
+            <div>
+                <table id="myTable" class="table table-dark table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Country</th>
+                        <th>Weight</th>
+                        <th>Cost</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="box : ${boxes}">
+                        <td><span th:text="${box.id}"></span></td>
+                        <td><span th:text="${box.name}"></span></td>
+                        <td><span th:text="${box.type}"></span></td>
+                        <td><span th:text="${box.country}"></span></td>
+                        <td><span th:text="${box.weight}"></span> - <span th:text="${box.weightType}"></span></td>
+                        <td><span th:text="${box.cost}"></span> SEK</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
 
         </div>
     </div>
 
 
     <div class="card-footer ">
-        <button type="submit" class="btn btn-outline-danger">Back</button>
+        <a href="/shipping/addForm" class="btn btn-outline-danger">Back</a>
     </div>
 </div>
 

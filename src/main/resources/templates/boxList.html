@@ -7,6 +7,40 @@
     <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+    <script>
+        function myFunction() {
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("name");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1]; // name column
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+
+        $(document).ready(function () {
+            $("#myInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 
@@ -17,7 +51,7 @@
         <div class="card-header card bg-dark text-white">
             <h2>Show List</h2>
             <p><a href="/shipping/addForm" class="btn btn-outline-success">Add Form</a></p>
-
+            <p><a href="/shipping/search" class="btn btn-outline-secondary">Advance Search</a></p>
         </div>
 
         <div></div>
@@ -33,11 +67,14 @@
 
             <div th:unless="${boxes.isEmpty()}">
 
-                <table class="table table-dark table-striped">
+                <input class="form-control" id="myInput" type="text" placeholder="Search..">
+                <br/>
+
+                <table id="myTable" class="table table-dark table-striped">
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Name</th>
+                        <th><input type="text" id="name" onkeyup="myFunction()" placeholder="Search by name.."></th>
                         <th>Type</th>
                         <th>Country</th>
                         <th>Weight</th>
